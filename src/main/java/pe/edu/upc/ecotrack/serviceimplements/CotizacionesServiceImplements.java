@@ -8,7 +8,7 @@ import pe.edu.upc.ecotrack.serviceinterfaces.ICotizacionesService;
 
 import java.util.List;
 @Service
-public class CotizacionesServiceImplement implements ICotizacionesService {
+public class CotizacionesServiceImplements implements ICotizacionesService {
     @Autowired
     private ICotizacionesRepository cR;
     @Override
