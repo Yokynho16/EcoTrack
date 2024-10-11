@@ -3,6 +3,7 @@ package pe.edu.upc.ecotrack.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.BuscarCultivosDTO;
 import pe.edu.upc.ecotrack.dtos.CultivosDTO;
@@ -49,7 +50,7 @@ public class CultivosController {
     public void eliminar(@PathVariable("id") Integer id) {
         cS.delete(id);
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/buscarCultivos")
     public List<BuscarCultivosDTO>buscarCultivos(@RequestParam String nombre) {
         List<String[]> lista = cS.buscarNombre(nombre);

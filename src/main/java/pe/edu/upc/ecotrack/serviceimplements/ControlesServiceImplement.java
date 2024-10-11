@@ -37,7 +37,7 @@ public class ControlesServiceImplement implements IControlesService {
     }
 
     @Override
-    public List<Controles> listarlotesportipodecontrol(String tipo_control) {
+    public List<String[]> listarlotesportipodecontrol(String tipo_control) {
         return cR.listarlotesportipodecontrol(tipo_control);
     }
 

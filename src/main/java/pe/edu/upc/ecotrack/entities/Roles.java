@@ -3,7 +3,7 @@ package pe.edu.upc.ecotrack.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Roles")
+@Table(name = "Roles", uniqueConstraints = {@UniqueConstraint(columnNames = {"idUsuarios", "tipo"})})
 public class Roles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,15 +13,17 @@ public class Roles {
     private String tipo;
 
     @ManyToOne
-    @JoinColumn(name="idUsuario", nullable = false)
+    @JoinColumn(name="idUsuarios", nullable = false)
     private Usuarios usuario;
+
 
     public Roles() {
     }
 
-    public Roles(int idRoles, String tipo) {
+    public Roles(int idRoles, String tipo, Usuarios usuario) {
         this.idRoles = idRoles;
         this.tipo = tipo;
+        this.usuario = usuario;
     }
 
     public int getIdRoles() {

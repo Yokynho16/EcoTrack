@@ -2,6 +2,7 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.AgricultorPagoDTO;
 import pe.edu.upc.ecotrack.dtos.QuejasDTO;
@@ -49,7 +50,7 @@ public class ReportesController {
 
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable ("id") Integer id) { rS.delete(id);}
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/buscarreporteporidqueja")
     public List<ReportePorQuejaDTO> reportePorIdQueja(@RequestParam Integer id_queja) {
         List<String[]> lista = rS.buscarReportePorIdQueja(id_queja);

@@ -15,5 +15,5 @@ public interface IControlesService {
     public void update(Controles controles);
 
     public void delete(int id);
-    List<Controles> listarlotesportipodecontrol(@Param("tipo_control") String tipo_control);
+    List<String[]> listarlotesportipodecontrol(@Param("tipo_control") String tipo_control);
 }

@@ -2,6 +2,7 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.PagosDTO;
 import pe.edu.upc.ecotrack.dtos.PagosEntreFechasDTO;
@@ -50,6 +51,7 @@ public class PagosController {
         pS.delete(id);
     }
 
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/pagospendientes")
     public List<PagosPendientesDTO> pagosPendientes() {
         List<String[]> lista = pS.PagosPendientes();
@@ -64,9 +66,10 @@ public class PagosController {
         return listaDTO;
     }
 
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/pagosentrefechas")
-    public List<PagosEntreFechasDTO> pagosEntreFechas() {
-        List<String[]> lista = pS.PagosPendientes();
+    public List<PagosEntreFechasDTO> pagosEntreFechas(@RequestParam("fecha_inicio") LocalDate f_i,@RequestParam("fecha_fin") LocalDate f_f) {
+        List<String[]> lista = pS.PagosEntreFechas(f_i, f_f);
         List<PagosEntreFechasDTO> listaDTO = new ArrayList<>();
         for (String[] columna : lista) {
             PagosEntreFechasDTO dto = new PagosEntreFechasDTO();

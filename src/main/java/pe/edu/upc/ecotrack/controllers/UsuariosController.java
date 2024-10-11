@@ -2,6 +2,8 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.AgricultorPagoDTO;
 import pe.edu.upc.ecotrack.dtos.QuejasPorUsuarioDTO;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 public class UsuariosController {
     @Autowired
     private IUsuariosService uS;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<UsuariosDTO> listar() {
@@ -32,6 +36,8 @@ public class UsuariosController {
     public void insertar(@RequestBody UsuariosDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         Usuarios u = modelMapper.map(dto, Usuarios.class);
+        String encodedPassword = passwordEncoder.encode(u.getPassword());
+        u.setPassword(encodedPassword);
         uS.insert(u);
     }
 
@@ -53,7 +59,7 @@ public class UsuariosController {
     public void eliminar(@PathVariable("id") Integer id) {
         uS.delete(id);
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/pagosagricultor")
     public List<AgricultorPagoDTO> pagosxNombre(@RequestParam String nombre) {
         List<String[]> lista = uS.reporteAgricultorVerPagos(nombre);
@@ -69,6 +75,7 @@ public class UsuariosController {
         }
         return listaDTO;
     }
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/quejasporusuario")
     public List<QuejasPorUsuarioDTO> quejasPorUsuario() {
         List<String[]> lista = uS.quejasporUsuarios();

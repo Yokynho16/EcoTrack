@@ -2,12 +2,17 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pe.edu.upc.ecotrack.dtos.AgricultorLoteDTO;
 import pe.edu.upc.ecotrack.dtos.ControlesDTO;
+import pe.edu.upc.ecotrack.dtos.LotesPorControlDTO;
 import pe.edu.upc.ecotrack.entities.Controles;
 import pe.edu.upc.ecotrack.serviceinterfaces.IControlesService;
 import pe.edu.upc.ecotrack.serviceinterfaces.IRolesService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,12 +56,22 @@ public class ControlesController {
         cS.delete(id);
     }
 
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/listarlotesportipodecontrol")
-    public List<ControlesDTO> listarlotesportipodecontrol(@RequestParam String l){
-        return cS.listarlotesportipodecontrol(l).stream().map(x->{
-            ModelMapper m = new ModelMapper();
-            return m.map(x, ControlesDTO.class);
-        }).collect(Collectors.toList());
+    public List<LotesPorControlDTO> lotesxcontrol(@RequestParam String tipo_control) {
+        List<String[]> lista = cS.listarlotesportipodecontrol(tipo_control);
+        List<LotesPorControlDTO> listaDTO = new ArrayList<>();
+        for (String[] columna : lista) {
+            LotesPorControlDTO dto = new LotesPorControlDTO();
+            dto.setTipo_control(columna[0]);
+            dto.setNombre(columna[1]);
+            dto.setTipo_cultivo(columna[2]);
+            dto.setFecha_siembra(LocalDate.parse(columna[3]));
+            dto.setEstado(columna[4]);
+            dto.setCantidad(Integer.parseInt(columna[5]));
+            listaDTO.add(dto);
+        }
+        return listaDTO;
     }
 
 }

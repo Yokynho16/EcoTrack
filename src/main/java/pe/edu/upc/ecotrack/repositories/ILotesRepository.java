@@ -22,7 +22,7 @@ public interface ILotesRepository extends JpaRepository<Lotes,Integer> {
             "Inner Join\n" +
             "\tusuarios u on l.id_usuarios = u.id_usuarios\n" +
             "Inner Join\n" +
-            "\troles r on u.id_roles = r.id_roles \n" +
+            "\troles r on u.id_usuarios = r.id_usuarios \n" +
             "Where\n" +
             "\tr.tipo = 'Agricultor' and u.nombre = :nombre",nativeQuery = true)
     public List<String[]> buscarLotesPorNombreAgricultor(@Param("nombre") String nombre);

@@ -53,18 +53,16 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(
-                                "/swagger-ui/**",     // Permitir acceso a Swagger UI
-                                "/v3/api-docs/**",    // Permitir acceso a OpenAPI docs
-                                "/swagger-resources/**", // Permitir acceso a recursos de Swagger
-                                "/webjars/**",        // Permitir acceso a recursos de Webjars
-                                "/login"              // Permitir acceso a la ruta de login
-                        ).permitAll()
-                        .anyRequest().authenticated() // Proteger todas las demás rutas
+                        // Permitir acceso sin autenticación a Swagger UI y la documentación de API
+                        .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
+                        .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+                        .requestMatchers(antMatcher("/swagger-ui.html")).permitAll()
+                        // Permitir login sin autenticación
+                        .requestMatchers(antMatcher("/login")).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)

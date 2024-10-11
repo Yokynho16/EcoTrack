@@ -16,6 +16,6 @@ public interface IControlesRepository extends JpaRepository<Controles, Integer> 
             "INNER JOIN lotes l on co.id_controles = l.id_controles\n " +
             "WHERE co.tipo_control =:tipo_control\n",
             nativeQuery = true)
-    List<Controles> listarlotesportipodecontrol(@Param("tipo_control") String tipo_control);
+    List<String[]> listarlotesportipodecontrol(@Param("tipo_control") String tipo_control);
 
 }
