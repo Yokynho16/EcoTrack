@@ -2,7 +2,6 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.AgricultorLoteDTO;
 import pe.edu.upc.ecotrack.dtos.ControlesDTO;
@@ -56,7 +55,6 @@ public class ControlesController {
         cS.delete(id);
     }
 
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/listarlotesportipodecontrol")
     public List<LotesPorControlDTO> lotesxcontrol(@RequestParam String tipo_control) {
         List<String[]> lista = cS.listarlotesportipodecontrol(tipo_control);

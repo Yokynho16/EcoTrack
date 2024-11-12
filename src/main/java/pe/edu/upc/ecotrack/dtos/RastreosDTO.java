@@ -9,20 +9,19 @@ import java.time.LocalDateTime;
 
 public class RastreosDTO {
 
-    private int idRastreo;
+    private int idRastreos;
     private LocalDate fecha_salida;
     private LocalDate fecha_llegada;
     private String estado;
     private String ubicacion_actual;
     private Vehiculos ve;
 
-
-    public int getIdRastreo() {
-        return idRastreo;
+    public int getIdRastreos() {
+        return idRastreos;
     }
 
-    public void setIdRastreo(int idRastreo) {
-        this.idRastreo = idRastreo;
+    public void setIdRastreos(int idRastreos) {
+        this.idRastreos = idRastreos;
     }
 
     public LocalDate getFecha_salida() {

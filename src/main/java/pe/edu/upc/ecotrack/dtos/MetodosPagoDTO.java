@@ -9,7 +9,7 @@ public class MetodosPagoDTO {
     private int idMetodosPago;
     private String nombre;
     private String descripcion;
-    private LocalDate estado;
+    private String estado;
     private Pagos pagos;
     private Usuarios usuario;
 
@@ -37,11 +37,11 @@ public class MetodosPagoDTO {
         this.descripcion = descripcion;
     }
 
-    public LocalDate getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(LocalDate estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 

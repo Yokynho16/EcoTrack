@@ -2,7 +2,6 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.RolesDTO;
 import pe.edu.upc.ecotrack.entities.Roles;
@@ -17,7 +16,6 @@ public class RolesController {
     @Autowired
     private IRolesService rS;
 
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping
     public List<RolesDTO> listar() {
         return rS.list().stream().map(x -> {
@@ -26,7 +24,6 @@ public class RolesController {
         }).collect(Collectors.toList());
     }
 
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @PostMapping
     public void insertar(@RequestBody RolesDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -34,7 +31,6 @@ public class RolesController {
         rS.insert(r);
     }
 
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/{id}")
     public RolesDTO listarId(@PathVariable("id") Integer id) {
         ModelMapper m = new ModelMapper();
@@ -42,7 +38,6 @@ public class RolesController {
         return dto;
     }
 
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @PutMapping
     public void modificar(@RequestBody RolesDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -50,7 +45,6 @@ public class RolesController {
         rS.update(r);
     }
 
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable("id") Integer id) {
         rS.delete(id);

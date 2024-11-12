@@ -2,7 +2,6 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.VehiculoRastreoRutaDTO;
 import pe.edu.upc.ecotrack.dtos.VehiculosDTO;
@@ -48,7 +47,6 @@ public class VehiculosController {
     }
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable("id")Integer id){vS.delete(id);}
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/rastreoxruta")
     public List<VehiculoRastreoRutaDTO> rastreoXRuta(@RequestParam String pl,@RequestParam LocalDate f_i,@RequestParam LocalDate f_f) {
         List<String[]> lista = vS.reporteVehiculosPorFechasYCantidadRutas(pl,f_i,f_f);
@@ -64,7 +62,6 @@ public class VehiculosController {
         }
         return listaDTO;
     }
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/vehiculosdisponibles")
     public List<VehiculosDisponibleDTO> vehiculosDisponibles() {
         List<String[]> lista = vS.reporteVehiculosDisponible();

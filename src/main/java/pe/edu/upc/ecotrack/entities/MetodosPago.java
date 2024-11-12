@@ -17,7 +17,7 @@ public class MetodosPago {
     private String descripcion;
 
     @Column(name = "estado", nullable = false, length = 20)
-    private LocalDate estado;
+    private String estado;
 
     @ManyToOne
     @JoinColumn(name = "idPagos")
@@ -30,7 +30,7 @@ public class MetodosPago {
     public MetodosPago() {
     }
 
-    public MetodosPago(int idMetodosPago, String nombre, String descripcion, LocalDate estado, Pagos pagos, Usuarios usuario) {
+    public MetodosPago(int idMetodosPago, String nombre, String descripcion, String estado, Pagos pagos, Usuarios usuario) {
         this.idMetodosPago = idMetodosPago;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -63,11 +63,11 @@ public class MetodosPago {
         this.descripcion = descripcion;
     }
 
-    public LocalDate getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(LocalDate estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 

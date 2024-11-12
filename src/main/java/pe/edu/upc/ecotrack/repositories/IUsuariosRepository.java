@@ -42,11 +42,14 @@ public interface IUsuariosRepository extends JpaRepository<Usuarios, Integer> {
 
     //BUSCAR POR NOMBRE
     @Query("select count(u.username) from Usuarios u where u.username =:username")
-    public int buscarUsername(@Param("username") String nombre);
+    public int buscarUsername(@Param("username") String husername);
 
     //INSERTAR ROLES
     @Transactional
     @Modifying
     @Query(value = "insert into roles (tipo, id_usuarios) VALUES (:rol, :id_usuarios)", nativeQuery = true)
     public void insRol(@Param("rol") String authority, @Param("id_usuarios") Long id_usuarios);
+
+    @Query("select count(u.password) from Usuarios u where u.password =:password")
+    public int buscarPassword(@Param("password") String hpassword);
 }
