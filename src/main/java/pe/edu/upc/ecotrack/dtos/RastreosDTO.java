@@ -16,6 +16,7 @@ public class RastreosDTO {
     private String ubicacion_actual;
     private Vehiculos ve;
 
+
     public int getIdRastreos() {
         return idRastreos;
     }

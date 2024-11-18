@@ -2,56 +2,57 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.upc.ecotrack.dtos.AgricultorPagoDTO;
-import pe.edu.upc.ecotrack.dtos.QuejasDTO;
 import pe.edu.upc.ecotrack.dtos.ReportePorQuejaDTO;
-import pe.edu.upc.ecotrack.dtos.ReportesDTO;
-import pe.edu.upc.ecotrack.entities.Reportes;
-import pe.edu.upc.ecotrack.serviceinterfaces.IReportesService;
+import pe.edu.upc.ecotrack.dtos.SolucionesDTO;
+import pe.edu.upc.ecotrack.entities.Soluciones;
+import pe.edu.upc.ecotrack.serviceinterfaces.ISolucionesService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/reportes")
-public class ReportesController {
+@RequestMapping("/soluciones")
+public class SolucionesController {
     @Autowired
-    private IReportesService rS;
+    private ISolucionesService sS;
     @GetMapping
-    public List<ReportesDTO> listar() {
-        return rS.list().stream().map(x->{
+    public List<SolucionesDTO> listar() {
+        return sS.list().stream().map(x->{
             ModelMapper m=new ModelMapper();
-            return m.map(x,ReportesDTO.class);
+            return m.map(x,SolucionesDTO.class);
         }).collect(Collectors.toList());
     }
 
     @PostMapping
-    public void insertar(@RequestBody ReportesDTO dto) {
+    public void insertar(@RequestBody SolucionesDTO dto) {
         ModelMapper m=new ModelMapper();
-        Reportes r=m.map(dto,Reportes.class);
-        rS.insert(r);
+        Soluciones r=m.map(dto,Soluciones.class);
+        sS.insert(r);
     }
     @GetMapping("/{id}")
-    public ReportesDTO listarId(@PathVariable("id") Integer id) {
+    public SolucionesDTO listarId(@PathVariable("id") Integer id) {
         ModelMapper m = new ModelMapper();
-        ReportesDTO dto = m.map(rS.listId(id), ReportesDTO.class);
+        SolucionesDTO dto = m.map(sS.listId(id), SolucionesDTO.class);
         return dto;
     }
     @PutMapping
-    public void modificar(@RequestBody ReportesDTO dto) {
+    public void modificar(@RequestBody SolucionesDTO dto) {
         ModelMapper m=new ModelMapper();
-        Reportes r=m.map(dto,Reportes.class);
-        rS.update(r);
+        Soluciones r=m.map(dto,Soluciones.class);
+        sS.update(r);
     }
 
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable ("id") Integer id) { rS.delete(id);}
+    public void eliminar(@PathVariable ("id") Integer id) { sS.delete(id);}
+
+
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/buscarreporteporidqueja")
     public List<ReportePorQuejaDTO> reportePorIdQueja(@RequestParam Integer id_queja) {
-        List<String[]> lista = rS.buscarReportePorIdQueja(id_queja);
+        List<String[]> lista = sS.buscarReportePorIdQueja(id_queja);
         List<ReportePorQuejaDTO> listaDTO = new ArrayList<>();
         for (String[] columna : lista) {
             ReportePorQuejaDTO dto = new ReportePorQuejaDTO();
@@ -61,5 +62,4 @@ public class ReportesController {
         }
         return listaDTO;
     }
-
 }

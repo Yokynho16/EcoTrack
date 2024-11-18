@@ -40,4 +40,9 @@ public class CultivosServiceImplement implements ICultivosService {
     public List<String[]> buscarNombre(String nombre) {
         return cR.buscarNombre(nombre);
     }
+
+    @Override
+    public List<Cultivos> listarCultivosUsername(String username) {
+        return cR.listarCultivosUsername(username);
+    }
 }

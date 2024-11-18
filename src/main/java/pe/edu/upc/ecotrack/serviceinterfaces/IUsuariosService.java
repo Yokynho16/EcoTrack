@@ -13,5 +13,7 @@ public interface IUsuariosService {
     public void  delete(int id);
     public List<String[]> reporteAgricultorVerPagos(@Param("nombre") String nombre);
     List<String[]> quejasporUsuarios();
-    public boolean validarCredenciales(String username, String password);
+
+
+    public int obtenerId(@Param("username") String username);
 }

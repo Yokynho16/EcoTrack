@@ -53,19 +53,19 @@ public class QuejasDTO {
         this.tipo = tipo;
     }
 
-    public String getRespuesta() {
-        return respuesta;
-    }
-
-    public void setRespuesta(String respuesta) {
-        this.respuesta = respuesta;
-    }
-
     public Usuarios getUsuario() {
         return usuario;
     }
 
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
+    }
+
+    public String getRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(String respuesta) {
+        this.respuesta = respuesta;
     }
 }

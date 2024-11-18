@@ -2,15 +2,13 @@ package pe.edu.upc.ecotrack.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.AgricultorPagoDTO;
-import pe.edu.upc.ecotrack.dtos.LoginRequest;
 import pe.edu.upc.ecotrack.dtos.QuejasPorUsuarioDTO;
 import pe.edu.upc.ecotrack.dtos.UsuariosDTO;
 import pe.edu.upc.ecotrack.entities.Usuarios;
-import pe.edu.upc.ecotrack.serviceimplements.UsuariosServiceImplement;
 import pe.edu.upc.ecotrack.serviceinterfaces.IUsuariosService;
 
 import java.time.LocalDate;
@@ -20,26 +18,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuarios")
+@PreAuthorize("hasAuthority('ADMINISTRADOR') or hasAuthority('AGRICULTOR') or hasAuthority('DISTRIBUIDOR') ")
 public class UsuariosController {
     @Autowired
     private IUsuariosService uS;
     @Autowired
-    private UsuariosServiceImplement uuS;
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String husername, @RequestParam String hpassword) {
-        // Llamamos al servicio para validar las credenciales
-        boolean autenticado = uuS.validarCredenciales(husername, hpassword);
-
-        if (autenticado) {
-            // Login exitoso
-            return ResponseEntity.ok("Login exitoso");
-        } else {
-            // Credenciales incorrectas
-            return ResponseEntity.status(401).body("Credenciales incorrectas");
-        }
-    }
-
+    private PasswordEncoder passwordEncoder;
+    @PreAuthorize("hasAuthority('ADMINISTRADOR') or hasAuthority('AGRICULTOR') or hasAuthority('DISTRIBUIDOR') ")
     @GetMapping
     public List<UsuariosDTO> listar() {
         return uS.list().stream().map(x->{
@@ -47,33 +32,35 @@ public class UsuariosController {
             return modelMapper.map(x,UsuariosDTO.class);
         }).collect(Collectors.toList());
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @PostMapping
     public void insertar(@RequestBody UsuariosDTO dto) {
         ModelMapper modelMapper = new ModelMapper();
         Usuarios u = modelMapper.map(dto, Usuarios.class);
+        String encodedPassword = passwordEncoder.encode(u.getPassword());
+        u.setPassword(encodedPassword);
         uS.insert(u);
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/{id}")
     public UsuariosDTO listarId(@PathVariable("id") Integer id) {
         ModelMapper m = new ModelMapper();
         UsuariosDTO dto = m.map(uS.listId(id), UsuariosDTO.class);
         return dto;
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @PutMapping
     public void modificar(@RequestBody UsuariosDTO dto) {
         ModelMapper m = new ModelMapper();
         Usuarios u = m.map(dto, Usuarios.class);
         uS.update(u);
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable("id") Integer id) {
         uS.delete(id);
     }
-
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/pagosagricultor")
     public List<AgricultorPagoDTO> pagosxNombre(@RequestParam String nombre) {
         List<String[]> lista = uS.reporteAgricultorVerPagos(nombre);
@@ -89,6 +76,7 @@ public class UsuariosController {
         }
         return listaDTO;
     }
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     @GetMapping("/quejasporusuario")
     public List<QuejasPorUsuarioDTO> quejasPorUsuario() {
         List<String[]> lista = uS.quejasporUsuarios();
@@ -96,10 +84,17 @@ public class UsuariosController {
         for (String[] columna : lista) {
             QuejasPorUsuarioDTO dto = new QuejasPorUsuarioDTO();
             dto.setNombre(columna[0]);
-            dto.setNombre((columna[1]));
-            dto.setCantidad(Integer.parseInt(columna[2]));
+            dto.setCantidad(Integer.parseInt(columna[1]));
             listaDTO.add(dto);
         }
         return listaDTO;
     }
+
+
+    @PreAuthorize("hasAuthority('ADMINISTRADOR') or hasAuthority('AGRICULTOR') or hasAuthority('DISTRIBUIDOR')")
+    @GetMapping("/obtenerid")
+    public int obtenerIdPorUsername(@RequestParam String username) {
+        return uS.obtenerId(username);
+    }
+
 }

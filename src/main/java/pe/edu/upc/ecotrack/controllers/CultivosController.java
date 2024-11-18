@@ -6,19 +6,23 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.ecotrack.dtos.BuscarCultivosDTO;
 import pe.edu.upc.ecotrack.dtos.CultivosDTO;
+import pe.edu.upc.ecotrack.dtos.LotesDTO;
 import pe.edu.upc.ecotrack.entities.Cultivos;
+import pe.edu.upc.ecotrack.entities.Lotes;
 import pe.edu.upc.ecotrack.serviceinterfaces.ICultivosService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/cultivos")
+@PreAuthorize("hasAuthority('AGRICULTOR')")
 public class CultivosController {
     @Autowired
     private ICultivosService cS;
+    @PreAuthorize("hasAuthority('AGRICULTOR')")
     @GetMapping
     public List<CultivosDTO> listar(){
         return cS.list().stream().map(x -> {
@@ -26,25 +30,28 @@ public class CultivosController {
             return m.map(x, CultivosDTO.class);
         }).collect(Collectors.toList());
     }
+    @PreAuthorize("hasAuthority('AGRICULTOR')")
     @PostMapping
     public void insertar(@RequestBody CultivosDTO dto) {
         ModelMapper m = new ModelMapper();
         Cultivos c = m.map(dto, Cultivos.class);
         cS.insert(c);
     }
+    @PreAuthorize("hasAuthority('AGRICULTOR')")
     @GetMapping("/{id}")
     public CultivosDTO listarId(@PathVariable("id") Integer id) {
         ModelMapper m = new ModelMapper();
         CultivosDTO dto = m.map(cS.listId(id), CultivosDTO.class);
         return dto;
     }
+    @PreAuthorize("hasAuthority('AGRICULTOR')")
     @PutMapping
     public void modificar(@RequestBody CultivosDTO dto) {
         ModelMapper m = new ModelMapper();
         Cultivos c = m.map(dto, Cultivos.class);
         cS.update(c);
     }
-
+    @PreAuthorize("hasAuthority('AGRICULTOR')")
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable("id") Integer id) {
         cS.delete(id);
@@ -61,5 +68,11 @@ public class CultivosController {
         }
         return listaDTO;
     }
-
+    @PreAuthorize("hasAuthority('AGRICULTOR')")
+    @GetMapping("/miscultivos")
+    public List<CultivosDTO> listarCultivosPorUsuario(@RequestParam("username")String username) {
+        List<Cultivos> cultivos = cS.listarCultivosUsername(username);
+        ModelMapper m = new ModelMapper();
+        return cultivos.stream().map(cultivo->m.map(cultivo, CultivosDTO.class)).collect(Collectors.toList());
+    }
 }

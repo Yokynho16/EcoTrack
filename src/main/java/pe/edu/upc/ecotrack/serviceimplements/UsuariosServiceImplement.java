@@ -49,21 +49,7 @@ public class UsuariosServiceImplement implements IUsuariosService {
     }
 
     @Override
-    public boolean validarCredenciales(String husername, String hpassword) {
-        int usernameCount = uR.buscarUsername(husername);
-        int passwordCount = uR.buscarPassword(hpassword);
-
-        if (usernameCount > 0) {
-            // Si el nombre de usuario existe, hacemos la comparación de la contraseña
-            // Verificamos si la contraseña coincide con la almacenada en la base de datos
-            if(passwordCount > 0) {
-                return true;
-            }
-        }
-
-        // Si el nombre de usuario no existe, retornamos falso
-        return false;
+    public int obtenerId(String username) {
+        return uR.obtenerId(username);
     }
-
-
 }
